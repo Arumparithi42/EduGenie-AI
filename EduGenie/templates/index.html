@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduGenie – AI Learning Assistant</title>
+    <meta name="description" content="EduGenie: Google Gemini powered learning assistant">
+    <link rel="stylesheet" href="{{ url_for('static', path='style.css') }}">
+</head>
+<body>
+    <header class="hero">
+        <h1>Welcome to EduGenie <span aria-hidden="true">🧠✨</span></h1>
+        <p>Your personal AI tutor for learning support, powered by Google Gemini.</p>
+        <div id="status" class="status status-unknown" role="status">Checking AI connection…</div>
+    </header>
+
+    <main class="container">
+        <form id="taskForm" class="card" novalidate>
+            <label for="task"><strong>What would you like to do?</strong></label>
+            <select id="task" name="task">
+                <option value="qa">❓ Ask a Question (Q&amp;A)</option>
+                <option value="explain">💡 Explain a Concept</option>
+                <option value="quiz">📝 Generate a Quiz</option>
+                <option value="summarize">📄 Summarize a Passage</option>
+                <option value="path">🗺️ Recommend a Learning Path</option>
+            </select>
+
+            <label for="userInput" id="inputLabel"><strong>Your question</strong></label>
+            <textarea id="userInput" name="userInput" rows="5" maxlength="20000" required
+                      placeholder="Which is the largest ocean?"></textarea>
+            <div class="hint-row">
+                <span id="hint" class="hint">Ask any academic or general-knowledge question.</span>
+                <span id="charCount" class="hint">0 / 20000</span>
+            </div>
+
+            <div class="options-row">
+                <div id="quizOptions" class="option hidden">
+                    <label for="numQuestions">Number of questions</label>
+                    <select id="numQuestions">
+                        <option value="3" selected>3</option>
+                        <option value="5">5</option>
+                        <option value="10">10</option>
+                    </select>
+                </div>
+                <div id="pathOptions" class="option hidden">
+                    <label for="level">Your current level</label>
+                    <select id="level">
+                        {% for level in levels %}
+                        <option value="{{ level }}">{{ level | capitalize }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+            <div class="examples">
+                <span class="hint">Try:</span>
+                <div id="examples" class="chips"></div>
+            </div>
+
+            <div class="actions">
+                <button type="submit" id="submitBtn">Get Answer</button>
+                <button type="button" id="clearBtn" class="secondary">Clear</button>
+            </div>
+        </form>
+
+        <section id="resultCard" class="card result hidden" aria-live="polite">
+            <div class="result-header">
+                <h2 id="resultTitle">Result</h2>
+                <div class="result-actions">
+                    <span id="sourceBadge" class="badge hidden"></span>
+                    <button type="button" id="copyBtn" class="secondary small">Copy</button>
+                </div>
+            </div>
+            <div id="loading" class="loading hidden">
+                <div class="spinner" aria-hidden="true"></div>
+                <span>EduGenie is thinking…</span>
+            </div>
+            <div id="result" class="output"></div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        EduGenie · FastAPI + Google Gemini · <a href="/docs" target="_blank" rel="noopener">API docs</a>
+    </footer>
+
+    <script src="{{ url_for('static', path='script.js') }}"></script>
+</body>
+</html>

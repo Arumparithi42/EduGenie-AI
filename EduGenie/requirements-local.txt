@@ -1,0 +1,8 @@
+# OPTIONAL: local LaMini-Flan-T5-783M model for the "Explain" feature.
+# Downloads ~3 GB (PyTorch + model weights). Without these packages EduGenie
+# automatically uses Gemini for explanations instead.
+-r requirements.txt
+transformers>=4.40
+torch>=2.2
+sentencepiece>=0.2
+accelerate>=0.30
