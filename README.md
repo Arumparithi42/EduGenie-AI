@@ -33,7 +33,7 @@ EduGenie-AI/
 │   ├── .env.example            # Configuration template → copy to .env
 │   └── pytest.ini
 ├── .vscode/                    # VS Code run/debug/test configuration
-├── 1. Brainstorming & Ideation/ … 8.Project Demonstration/   # Project template deliverables
+├── Project Documents/          # All phase-wise project documents (DOCX + PDF), phases 1–8
 └── README.md
 ```
 
@@ -117,6 +117,13 @@ RUN_LIVE_TESTS=1 pytest -m live -v
 $env:RUN_LIVE_TESTS="1"; pytest -m live -v
 ```
 
+### Performance / load test (server must be running)
+```bash
+cd EduGenie
+python tests/load_test.py --users 10 --duration 15
+```
+This sends concurrent requests to every endpoint and reports average/p95/max response time, requests per second and error rate. With a real key the AI endpoints use your Gemini quota, so keep the user count small on a free key.
+
 ### Manual functional testing (scenarios from the project document)
 | Task in the dropdown | Input | Expected |
 |---|---|---|
@@ -158,6 +165,9 @@ curl "http://127.0.0.1:8000/learn/recommendations?topic=SQL&level=beginner"
 | `Address already in use` | Another server is running on port 8000: stop it or use `uvicorn main:app --reload --port 8001`. |
 | `ModuleNotFoundError: main` | Run uvicorn from inside the `EduGenie` folder (`cd EduGenie`). |
 | First *Explain* request is very slow | With the local model installed, the first request downloads ~3 GB. Set `EXPLAIN_BACKEND=gemini` to skip it. |
+
+## Project documents
+`Project Documents/` contains the filled-in phase-wise templates (phases 1–8) for **EduGenie: Google Gemini Powered Learning Assistant**, prepared by **Arumparithi B** (single-member team). Each document is provided as an editable **.docx** and a **.pdf**. The **Date** and **Team ID** fields are intentionally left blank / `xxxxxx` until they are assigned. Update them in the .docx files and re-export to PDF (*File → Save As / Export → PDF*). The project documentation also has marked boxes where screenshots of live AI results go once you run the app with your API key.
 
 ## Future scope
 Voice interaction, multilingual support, a mobile app, progress dashboards, gamification (badges/streaks), LMS integration (Moodle / Google Classroom), and image/PDF input.
