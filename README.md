@@ -33,7 +33,8 @@ EduGenie-AI/
 │   ├── .env.example            # Configuration template → copy to .env
 │   └── pytest.ini
 ├── .vscode/                    # VS Code run/debug/test configuration
-├── Project Documents/          # All phase-wise project documents (DOCX + PDF), phases 1–8
+├── Phase-wise Documentation/   # All phase-wise project documents (DOCX + PDF), phases 1–8
+├── ProjectDocument.docx        # Final project documentation (with screenshots)
 └── README.md
 ```
 
@@ -170,7 +171,9 @@ curl "http://127.0.0.1:8000/learn/recommendations?topic=SQL&level=beginner"
 | First *Explain* request is very slow | With the local model installed, the first request downloads ~3 GB. Set `EXPLAIN_BACKEND=gemini` to skip it. |
 
 ## Project documents
-`Project Documents/` contains the filled-in phase-wise templates (phases 1–8) for **EduGenie: Google Gemini Powered Learning Assistant**, prepared by **Arumparithi B** (single-member team). Each document is provided as an editable **.docx** and a **.pdf**. The **Date** and **Team ID** fields are intentionally left blank / `xxxxxx` until they are assigned. Update them in the .docx files and re-export to PDF (*File → Save As / Export → PDF*). `7. Project Documentation/EduGenie Project Documentation.docx` follows the structure of the original EduGenie project document and has a labelled **[ PASTE SCREENSHOT HERE ]** box for every figure (each box says exactly what to capture, including file names and line numbers for code screenshots). Click inside a box, select its text, paste your screenshot (Ctrl+V), then export to PDF.
+**Team ID:** SWTID-2026-7859 · **Team:** Arumparithi B (Team Leader), Atchayabharath K S
+
+`Phase-wise Documentation/` contains the filled-in phase-wise templates (phases 1–8) for **EduGenie: Google Gemini Powered Learning Assistant**, each as an editable **.docx** and a **.pdf** (dated 03 October 2026). `ProjectDocument.docx` (also in `7. Project Documentation/` as *EduGenie Project Documentation*, with a PDF) is the final project documentation with screenshots. To change a document, edit the .docx and re-export it to PDF (*File → Save As / Export → PDF*).
 
 ## Future scope
 Voice interaction, multilingual support, a mobile app, progress dashboards, gamification (badges/streaks), LMS integration (Moodle / Google Classroom), and image/PDF input.
