@@ -148,7 +148,9 @@ curl "http://127.0.0.1:8000/learn/recommendations?topic=SQL&level=beginner"
 | Variable | Default | Description |
 |---|---|---|
 | `GEMINI_API_KEY` | none | Your Google AI Studio API key (required) |
-| `GEMINI_MODEL` | `gemini-flash-latest` | Any Gemini model you can access, e.g. `gemini-2.5-flash` |
+| `GEMINI_MODEL` | `gemini-flash-latest` | Any Gemini model you can access, e.g. `gemini-3.5-flash` |
+| `GEMINI_FALLBACK_MODELS` | `gemini-flash-latest,gemini-flash-lite-latest` | Backup models tried when the main model is overloaded (`none` disables) |
+| `GEMINI_MAX_RETRIES` | `2` | Automatic retries per model for 503 / 429 / 5xx errors (exponential backoff) |
 | `EXPLAIN_BACKEND` | `auto` | `auto` (local model if installed, else Gemini), `local`, or `gemini` |
 | `PRELOAD_LOCAL_MODEL` | `false` | Load the local model at startup instead of on the first request |
 | `LOG_LEVEL` | `INFO` | Server log level |
@@ -160,8 +162,9 @@ curl "http://127.0.0.1:8000/learn/recommendations?topic=SQL&level=beginner"
 | `'uvicorn' is not recognized` / `command not found` | The virtual environment isn't active: re-run the *activate* command from step 3. |
 | Badge says *Gemini API key missing* / HTTP 503 | Create `EduGenie/.env` with `GEMINI_API_KEY=...` and restart the server. |
 | *API key not valid* | Re-copy the key from AI Studio; make sure there are no quotes or spaces. |
-| *model … is not found* / 404 | Set `GEMINI_MODEL` to a model listed in AI Studio (e.g. `gemini-2.5-flash`). |
-| *Quota exceeded* / 429 | Free-tier rate limit: wait a minute and try again. |
+| *model … is not found* / 404 | Set `GEMINI_MODEL` to a model listed in AI Studio (e.g. `gemini-flash-latest`). |
+| *This model is currently experiencing high demand* (503) | Google's servers are temporarily overloaded. EduGenie already retries automatically and switches to the backup models in `GEMINI_FALLBACK_MODELS`; if you still see the message, every model was busy. Wait a minute and click **Try again**, or set `GEMINI_MODEL` to a less busy model (e.g. `gemini-flash-lite-latest`). |
+| *Quota exceeded* / 429 | Free-tier rate limit: EduGenie retries and falls back automatically; if it persists, wait a minute and try again. |
 | `Address already in use` | Another server is running on port 8000: stop it or use `uvicorn main:app --reload --port 8001`. |
 | `ModuleNotFoundError: main` | Run uvicorn from inside the `EduGenie` folder (`cd EduGenie`). |
 | First *Explain* request is very slow | With the local model installed, the first request downloads ~3 GB. Set `EXPLAIN_BACKEND=gemini` to skip it. |

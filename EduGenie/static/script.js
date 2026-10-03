@@ -160,7 +160,9 @@
         if (!response.ok) {
             let message = data.error || data.detail || `Request failed (HTTP ${response.status}).`;
             if (Array.isArray(message)) message = message.map((d) => d.msg).join("; ");
-            throw new Error(message);
+            const err = new Error(message);
+            err.status = response.status;
+            throw err;
         }
         return data;
     }
@@ -203,12 +205,20 @@
         $("charCount").textContent = `${input.value.length} / ${input.maxLength}`;
     }
 
+    let slowTimer = null;
+
     function setLoading(isLoading) {
         submitBtn.disabled = isLoading;
         loadingEl.classList.toggle("hidden", !isLoading);
+        clearTimeout(slowTimer);
+        $("loadingText").textContent = "EduGenie is thinking…";
         if (isLoading) {
             resultEl.innerHTML = "";
             sourceBadge.classList.add("hidden");
+            // The backend retries automatically when Gemini is overloaded, which can take a while.
+            slowTimer = setTimeout(() => {
+                $("loadingText").textContent = "Gemini is busy – EduGenie is retrying automatically, please wait…";
+            }, 8000);
         }
     }
 
@@ -221,9 +231,17 @@
         }
     }
 
-    function showError(message) {
+    function showError(message, canRetry = false) {
         lastPlainText = message;
         resultEl.innerHTML = `<div class="error">⚠️ ${escapeHtml(message)}</div>`;
+        if (canRetry) {
+            const retryBtn = document.createElement("button");
+            retryBtn.type = "button";
+            retryBtn.className = "secondary small retry-btn";
+            retryBtn.textContent = "Try again";
+            retryBtn.addEventListener("click", () => form.requestSubmit());
+            resultEl.appendChild(retryBtn);
+        }
     }
 
     // ------------------------------------------------------------------ quiz
@@ -317,7 +335,9 @@
                 showText(data.recommendation, "Gemini");
             }
         } catch (err) {
-            showError(err.message || "Something went wrong. Please try again.");
+            // 502/503/504 (AI busy or failed) and network errors are worth retrying; 4xx input errors are not.
+            const canRetry = !err.status || err.status >= 500;
+            showError(err.message || "Something went wrong. Please try again.", canRetry);
         } finally {
             setLoading(false);
             resultCard.scrollIntoView({ behavior: "smooth", block: "start" });

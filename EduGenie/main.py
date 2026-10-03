@@ -84,6 +84,10 @@ def validate_input(value: str | None, name: str, max_chars: int) -> str | JSONRe
 
 
 def ai_error(exc: gemini_client.GeminiError) -> JSONResponse:
+    if isinstance(exc, gemini_client.GeminiBusyError):
+        response = error(str(exc), 503)
+        response.headers["Retry-After"] = "60"
+        return response
     status = 503 if isinstance(exc, gemini_client.GeminiNotConfiguredError) else 502
     return error(str(exc), status)
 
@@ -100,6 +104,8 @@ def health():
         "status": "ok",
         "gemini_configured": gemini_client.is_configured(),
         "gemini_model": gemini_client.get_model_name(),
+        "gemini_fallback_models": gemini_client.get_fallback_models(),
+        "gemini_max_retries": gemini_client.get_max_retries(),
         "explain_backend": explanation_module.get_backend(),
         "local_model_available": explanation_module.local_model_available(),
     }
